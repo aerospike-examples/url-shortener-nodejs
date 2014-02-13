@@ -1,19 +1,19 @@
-#An URL shortener application in node.js
+##An URL shortener application in node.js
 
 Demonstrates URL shortening, using Aerospike-Client-Node.js client
 and Aerospike database server.
 
-##Prerequisites
+###Prerequisites
 
 [Node.js](http://nodejs.org) version v0.10.x is required.
 To install the latest stable version of Node.js, visit
 [http://nodejs.org/download/](http://nodejs.org/download/).
 
-##Installation
+###Installation
     
     $npm install
 
-##Usage
+###Usage
 
 To run the application.
 
