@@ -127,7 +127,7 @@ client.exists( key, function (err, rec, metadata, key) {
    // If the counter does not exist, write 1000 counters, to the aerospike cluster.
    // 1000 counters are written to avoid the hot key error in the aerospike server.
    if ( err.code == 602){
-    for ( var i = 1; i <= 1000; i++) {
+    for ( var i = 0; i <= 999; i++) {
         var key = { ns : argv.namespace, set : argv.set, key : i};
         var rec = { url_counter : 0}
         var metadata = {ttl : 0, gen : 0 }
@@ -155,7 +155,7 @@ client.exists( key, function (err, rec, metadata, key) {
  ********************************************************************************/
 
 function fetch_counter_from_aerospike( callback) {
-    var key_index = Math.floor((Math.random()*1000)+1);
+    var key_index = Math.floor((Math.random()*1000));
     var key = { ns: argv.namespace, set : argv.set, key : key_index};
     var ops = [ op.incr('url_counter', 1),
                 op.read('url_counter')];
@@ -186,11 +186,15 @@ function generate_short_URL(callback)
 {
     // Algorithm that returns a short url with 5 chars
     fetch_counter_from_aerospike(function (err, rec, metadata, key){
-        var num = key.key*1000 + rec.url_counter;
-        var short_url = num_to_base62(num);
-        while(short_url.length < 5) {
-            short_url = base62[0]+short_url;
+        var counter_str = num_to_base62(rec.url_counter);
+        var key_str = num_to_base62(key.key);
+        while(key_str.length < 3) {
+            key_str = base62[0] + key_str;
         }
+        while(counter_str.length < 3) {
+            counter_str = base62[0]+counter_str;
+        }
+        var short_url = key_str + counter_str;
         callback(short_url);
     });
 }
